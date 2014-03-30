@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal" >
+
+    <TextView
+        android:layout_height="55dp"
+        android:id="@+id/tV_nom_joueur"
+        android:layout_width="match_parent"
+        android:text="@string/nouveau_nom"
+        android:gravity="center_vertical|center_horizontal"
+        android:textSize="21sp"
+        android:layout_marginBottom="25dp"
+        android:background="@color/dark_blue"
+        android:textColor="@color/white"
+        android:textStyle="bold" />
+
+    <EditText
+        android:layout_height="wrap_content"
+        android:layout_width="300dp"
+        android:hint="@string/hint_joueur"
+        android:textSize="20sp"
+        android:id="@+id/nom_joueur"
+        android:inputType="textCapWords"
+        android:selectAllOnFocus="true"
+        android:capitalize="words" />
+</LinearLayout>
