@@ -73,10 +73,10 @@ public class JeuControlleur {
         try {
             this.actions = parserAction.parse(inAction);
         } catch (XmlPullParserException e) {
-            e.printStackTrace();
+            throw new RuntimeException();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException();
         }
 
         setMode(mode);
