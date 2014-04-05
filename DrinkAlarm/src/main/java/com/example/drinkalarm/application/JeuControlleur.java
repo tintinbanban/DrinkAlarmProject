@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.app.Notification;
 import android.content.DialogInterface;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
@@ -14,6 +16,8 @@ import java.util.regex.Pattern;
 
 import com.example.drinkalarm.R;
 import com.example.drinkalarm.metier.*;
+
+import org.xmlpull.v1.XmlPullParserException;
 
 /**
  * Controlleur principale du jeu
@@ -31,15 +35,6 @@ public class JeuControlleur {
     private Mode hard = new Mode("hard",50F);
     private Mode legend = new Mode("legend",80F);
 
-    // CONSTANTES CHEMINS DES FICHIERS
-    private final String HORNTUNE = "DrinkAlarm/res/horn_tune.wav";
-    private final String DANSE_DU_VENTRE = "DrinkAlarm/res/danse_du_ventre.wav";
-    private final String CALL_TO_ARMS = "DrinkAlarm/res/call_to_arms.wav";
-    private final String TOUR_DE_FRANCE = "DrinkAlarm/res/tour_de_france.wav";
-    private final String AIR_RAID_2 = "DrinkAlarm/res/air_raid_2.wav";
-    private final String POUET_POUET = "DrinkAlarm/res/pouet_pouet.wav";
-    private final String WOW = "DrinkAlarm/res/wow.wav";
-
     //CONSTANTES code retour(nom) -> 0 : OK / 1 : non valide / 3 : chaine vide /4 : chaine trop petite ou trop grande
     public final static int OK = 0;
     public final static int ERR = 1;
@@ -56,9 +51,6 @@ public class JeuControlleur {
     public final static String NOM_JOUEURS_NEXT = "////";
     public final static String FIN_LISTE_NEXT = "\\\\";
 
-    // Tableau d'association des chemins de chansons String - Integer
-    private static Hashtable<String, Integer> collecChansons;
-
     // Liste de noms de joueurs : suggestions
     private static Hashtable<Integer,String> collecNoms;
 
@@ -72,124 +64,22 @@ public class JeuControlleur {
      * Insertion du mode de la partie
      * @param mode Mode de la partie
      */
-    public JeuControlleur(String mode) {
+    public JeuControlleur(String mode, InputStream inAction) {
         joueurs = new ArrayList<Joueur>();
         collecNoms = new Hashtable<Integer, String>(50);
-        collecChansons = new Hashtable<String, Integer>();
 
-        // Remplissage du tableau pour la suggestion des noms
-        collecNoms.put(1, "Alfred");
-        collecNoms.put(2, "Georges");
-        collecNoms.put(3, "Joris");
-        collecNoms.put(4, "Jean-Albert");
-        collecNoms.put(5, "Maurice");
-        collecNoms.put(6, "Mike");
-        collecNoms.put(7, "Batman");
-        collecNoms.put(8, "Alphonse");
-        collecNoms.put(9, "Jean");
-        collecNoms.put(10, "Christophe");
-        collecNoms.put(11, "Albert");
-        collecNoms.put(12, "Thierry");
-        collecNoms.put(13, "Eric");
-        collecNoms.put(14, "Joël");
-        collecNoms.put(15, "Wilfried");
-        collecNoms.put(16, "Léon");
-        collecNoms.put(17, "Titeuf");
-        collecNoms.put(18, "Casper");
-        collecNoms.put(19, "Martine");
-        collecNoms.put(20, "Jean-Louis");
-        collecNoms.put(21, "Jean-Paul");
-        collecNoms.put(22, "Raymond");
-        collecNoms.put(23, "Frédéric");
-        collecNoms.put(24, "Dora");
-        collecNoms.put(25, "Arnold");
-        collecNoms.put(26, "Michel");
-        collecNoms.put(27, "Jean-Michel");
-        collecNoms.put(28, "Christian");
-        collecNoms.put(29, "Louis");
-        collecNoms.put(30, "José");
-        collecNoms.put(31, "Maria");
-        collecNoms.put(32, "Louise");
-        collecNoms.put(33, "Marie-Louise");
-        collecNoms.put(34, "Jean-Michel");
-        collecNoms.put(35, "Hugues");
-        collecNoms.put(36, "Roger");
-        collecNoms.put(37, "Luc");
-        collecNoms.put(38, "Serge");
-        collecNoms.put(39, "Maryline");
-        collecNoms.put(40, "Yvette");
-        collecNoms.put(41, "Berthe");
-        collecNoms.put(42, "Béatrice");
-        collecNoms.put(43, "Joséphine");
-        collecNoms.put(44, "Angela");
-        collecNoms.put(45, "Ségolène");
-        collecNoms.put(46, "Yves");
-        collecNoms.put(47, "Marcel");
-        collecNoms.put(48, "Superman");
-        collecNoms.put(49, "Bioman");
-        collecNoms.put(50, "Capitaine-Flamme");
+        ActionXmlParser parserAction = new ActionXmlParser();
 
-        // Remplissage du tableau pour les correspondances des chemins des chansons
-        collecChansons.put(HORNTUNE,R.raw.horn_tune);
-        collecChansons.put(DANSE_DU_VENTRE,R.raw.danse_du_ventre);
-        collecChansons.put(CALL_TO_ARMS,R.raw.call_to_arms);
-        collecChansons.put(TOUR_DE_FRANCE,R.raw.tour_de_france);
-        collecChansons.put(AIR_RAID_2,R.raw.air_raid_2);
-        collecChansons.put(POUET_POUET,R.raw.pouet_pouet);
-        collecChansons.put(WOW,R.raw.wow);
+        try {
+            this.actions = parserAction.parse(inAction);
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
 
-        // Attribution des actions
-        Action a = new Action("A LA VOTRE", "... Olé !!!! Une gorgée pour TOUT le monde", HORNTUNE);
-        a.setChance(soft, 40F);
-        a.setChance(medium, 37F);
-        a.setChance(hard, 30F);
-        a.setChance(legend,50F);
-        this.actions.add(a);
-
-        a = new Action("BIZUT TIME", "Une gorgée pour le BIZUT", DANSE_DU_VENTRE);
-        a.setChance(soft, 20F);
-        a.setChance(medium,23F);
-        a.setChance(hard, 20F);
-        a.setChance(legend, 0F);
-        a.setNbParticipant(1);
-        this.actions.add(a);
-
-        a = new Action("CUL SEC !", "Attention au bufffalo...", AIR_RAID_2);
-        a.setChance(soft, 20F);
-        a.setChance(medium,22F);
-        a.setChance(hard,5F);
-        a.setChance(legend, 13F);
-        this.actions.add(a);
-
-        a = new Action("FREEZE", "Ne bougez plus !", POUET_POUET);
-        a.setChance(soft,10F);
-        a.setChance(medium,8F);
-        a.setChance(hard, 14F);
-        a.setChance(legend, 13F);
-        this.actions.add(a);
-
-        a = new Action("KING TIME", "Tout le monde boit, sauf le ROI", CALL_TO_ARMS);
-        a.setChance(soft,5F);
-        a.setChance(medium,8F);
-        a.setChance(hard, 30F);
-        a.setChance(legend, 35F);
-        a.setNbParticipant(1);
-        this.actions.add(a);
-
-        a = new Action("BOUFFON DU ROI ?"," gorgée(s) pour le bouffon du ROI", TOUR_DE_FRANCE);
-        a.setChance(soft, 5F);
-        a.setChance(medium, 2F);
-        a.setChance(hard,1F);
-        a.setChance(legend, 2F);
-        a.setGorgeRamdom(true);
-        a.setNbParticipant(1);
-        this.actions.add(a);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         setMode(mode);
-    }
-
-    public JeuControlleur(){
-        new JeuControlleur("medium");
     }
 
     //Getteur & Setteur
@@ -235,7 +125,7 @@ public class JeuControlleur {
         // Génération aléatoire de n nombres
         int i = 0;
         while (i < proba) {
-            nb = ((int) (Math.random() * 10000000000000.0 / 100000000000.0));
+            nb = ((int) (Math.random() * 100.0));
             if (!collection.contains(nb)) {
                 collection.add(nb);
                 i++;
@@ -255,7 +145,7 @@ public class JeuControlleur {
         Action action;
         Iterator<Action> iterator = this.actions.iterator();
 
-        int randomNumber = (int) (Math.random() * 100000000000.0 / 1000000000.0);
+        int randomNumber = (int) (Math.random() * 100.0);
 
         if(testDrink(randomAlarmNumbers, mode.getChance(), randomNumber)){
             //System.out.println("on peut boire !");
@@ -263,7 +153,7 @@ public class JeuControlleur {
             while (iterator.hasNext()) {
                 action = iterator.next();
 
-                if (testDrink(randomAlarmNumbers, action.getChance(mode), randomNumber)) {
+                if (testDrink(randomAlarmNumbers, action.getChance(mode.getLibelle()), randomNumber)) {
                     return action;
                 }
             }
@@ -328,7 +218,7 @@ public class JeuControlleur {
 
     //Méthode qui détermine la décision d'appel à renvoyer à l'utilisateur
     public Action obtenirDecision(Action action) {
-        Action actionAppel = new Action("","",null);
+        Action actionAppel = new Action();
         return  actionAppel;
     }
 
@@ -372,12 +262,6 @@ public class JeuControlleur {
         }
         name = new String(tabName);
         return name;
-    }
-
-    //Méthode statique qui retourne le chemin d'un fichier musical sous forme d'un entier en fonction du chemin en
-    // chaîne de caractères
-    public static int getSon(String cheminSon) {
-        return collecChansons.get(cheminSon);
     }
 
     //Méthode statique qui détecte et corrige les doublons avant l'insertion dans une liste

@@ -165,6 +165,9 @@ public class JeuActivite extends ActionBarActivity {
     @SuppressLint("ResourceAsColor")
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
+        getResources().getIdentifier("horn_turn","strings",getPackageName());
+
         //Instanciation du lecteur audio
         mp = new MediaPlayer();
         //Mise en place du vibreur
@@ -188,7 +191,7 @@ public class JeuActivite extends ActionBarActivity {
         editor = preferences.edit();
 
         // Controller init
-        controller = new JeuControlleur("medium");
+        controller = new JeuControlleur("medium",getResources().openRawResource(R.raw.actions));
         controller.addJoueur(preferences.getString(SettingsActivity.NOM_DEFAUT, getString(R.string.nom_defaut)));
 
         /**
@@ -386,7 +389,7 @@ public class JeuActivite extends ActionBarActivity {
          */
         //Appel à un thread toutes les secondes
         chrono = (TextView) findViewById(R.id.compteur);
-        handler.postDelayed(run, 500);
+        handler.postDelayed(run, 1000);
     }
 
     // Utilisation de l'interface Runnable pour le multi-threading
@@ -422,7 +425,6 @@ public class JeuActivite extends ActionBarActivity {
 
     //Méthode publique qui gère l'utilisation du chrono
     public void updateTime() {
-        changeColor();
         if (getSecondes() == 0) {
             //Cas lancement d'une ACTION !!
             if (chrono.getText().toString().compareTo("00:00") == 0) {
@@ -439,8 +441,8 @@ public class JeuActivite extends ActionBarActivity {
 
                     //Apparition d'une Action
                     layoutAction.setBackgroundColor(Color.rgb(34,34,34));
-                    final String affTitre = action.getTitreAction() + "  -  (" + dteFormatee + ")";
-                    String affDesc = action.play(controller.getJoueurs());
+                    final String affTitre = getString(action.getTitreAction()) + "  -  (" + dteFormatee + ")";
+                    String affDesc = action.play(controller.getJoueurs(),getString(action.getDescAction()));
                     titreAction.setText(affTitre);
                     descAction.setText(affDesc);
                     imgAction.setImageResource(R.drawable.marteau_tour_appel);
@@ -457,9 +459,8 @@ public class JeuActivite extends ActionBarActivity {
                                 itemsLogs.add(0,unLog);
                     }
                     logsLv.setAdapter(adaptLogs);
-
                     //Chargement d'une chanson
-                    mp = MediaPlayer.create(getApplicationContext(),JeuControlleur.getSon(action.getCheminSon()));
+                    mp = MediaPlayer.create(getApplicationContext(), getResources().getIdentifier(action.getCheminSon(),"strings",getPackageName()));
                     mp.start();
                     //Mise en place d'un écouteur sur l'image (pour faire appel)
                     imgAction.setOnClickListener(new View.OnClickListener() {
@@ -467,7 +468,7 @@ public class JeuActivite extends ActionBarActivity {
                         public void onClick(View view) {
                             //Message de confirmation
                             new AlertDialog.Builder(JeuActivite.this)
-                                    .setTitle("Décision du " + dteFormatee + " : " + action.getTitreAction())
+                                    .setTitle("Décision du " + dteFormatee + " : " + getString(action.getTitreAction()))
                                     .setIcon(R.drawable.warning_icon)
                                     .setMessage("Souhaitez-vous vraiment faire appel ?")
                                     .setPositiveButton("Oui", new DialogInterface.OnClickListener()
@@ -497,7 +498,7 @@ public class JeuActivite extends ActionBarActivity {
             else
                 chrono.setText("00:" + (getSecondes() - 1));
         }
-        handler.postDelayed(run, 500);
+        handler.postDelayed(run, 1000);
     }
 
     //Méthode qui détermine le nombre de secondes affichées sur le chronomètre
@@ -755,5 +756,10 @@ public class JeuActivite extends ActionBarActivity {
         builderErreur = JeuControlleur.completeBuilderErreur(builderErreur, codeRetour, name);
         builderErreur.create();
         builderErreur.show();
+    }
+
+
+    private String getString(String s){
+        return getResources().getString(getResources().getIdentifier(s,"strings",getPackageName()));
     }
 }

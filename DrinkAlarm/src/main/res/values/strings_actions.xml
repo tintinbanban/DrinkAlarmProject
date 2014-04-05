@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="action_a_la_votre">A LA VOTRE</string>
+    <string name="action_description_a_la_votre">... Olé !!!! Une gorgée pour TOUT le monde</string>
+    <string name="action_bizut_time">BIZUT TIME</string>
+    <string name="action_description_bizut_time">Une gorgée pour le BIZUT</string>
+     <string name="action_cul_sec">CUL SEC !</string>
+    <string name="action_description_cul_sec">Attention au bufffalo...</string>
+     <string name="action_freeze">FREEZE</string>
+    <string name="action_description_freeze">Ne bougez plus !</string>
+     <string name="action_king_time">KING TIME</string>
+    <string name="action_description_king_time">Tout le monde boit, sauf le ROI</string>
+     <string name="action_bouffon_roi">BOUFFON DU ROI ?</string>
+    <string name="action_description_bouffon_roi"> gorgée(s) pour le bouffon du ROI</string>
+</resources>
