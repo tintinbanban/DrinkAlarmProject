@@ -23,13 +23,20 @@ public class Joueur {
      */
     private Boolean actif = true;
 
+    private Integer id;
 
-    public Joueur(String nom) {
-        this.nom = nom;
+    public Integer getId() {
+        return id;
     }
 
-    public Joueur(){}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
+    public Joueur(String nom, Integer id) {
+        this.nom = nom;
+        this.id = id;
+    }
 
     public Boolean isActif() {
         return actif;

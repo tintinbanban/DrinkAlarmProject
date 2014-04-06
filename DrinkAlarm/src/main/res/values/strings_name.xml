@@ -1,52 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="name_1">Alfred</string>
-    <string name="name_2">Georges</string>
-    <string name="name_3">Joris</string>
-    <string name="name_4">Jean-Albert</string>
-    <string name="name_5">Maurice</string>
-    <string name="name_6">Mike</string>
-    <string name="name_7">Batman</string>
-    <string name="name_8">Alphonse</string>
-    <string name="name_9">Jean</string>
-    <string name="name_10">Christophe</string>
-    <string name="name_11">Albert</string>
-    <string name="name_12">Thierry</string>
-    <string name="name_13">Eric</string>
-    <string name="name_14">Joël</string>
-    <string name="name_15">Wilfried</string>
-    <string name="name_16">Léon</string>
-    <string name="name_17">Titeuf</string>
-    <string name="name_18">Casper</string>
-    <string name="name_19">Martine</string>
-    <string name="name_20">Jean-Louis</string>
-    <string name="name_21">Jean-Paul</string>
-    <string name="name_22">Raymond</string>
-    <string name="name_23">Frédéric</string>
-    <string name="name_24">Dora</string>
-    <string name="name_25">Arnold</string>
-    <string name="name_26">Michel</string>
-    <string name="name_27">Jean-Michel</string>
-    <string name="name_28">Christian</string>
-    <string name="name_29">Louis</string>
-    <string name="name_30">José</string>
-    <string name="name_31">Maria</string>
-    <string name="name_32">Louise</string>
-    <string name="name_33">Marie-Louise</string>
-    <string name="name_34">Hugues</string>
-    <string name="name_35">Roger</string>
-    <string name="name_36">Luc</string>
-    <string name="name_37">Serge</string>
-    <string name="name_38">Maryline</string>
-    <string name="name_39">Yvette</string>
-    <string name="name_40">Berthe</string>
-    <string name="name_41">Béatrice</string>
-    <string name="name_42">Joséphine</string>
-    <string name="name_43">Angela</string>
-    <string name="name_44">Ségolène</string>
-    <string name="name_45">Yves</string>
-    <string name="name_46">Marcel</string>
-    <string name="name_47">Superman</string>
-    <string name="name_48">Bioman</string>
-    <string name="name_49">Capitaine-Flamme</string>
+    <string-array name="name">
+        <item>Alfred</item>
+        <item>Georges</item>
+        <item>Joris</item>
+        <item>Jean-Albert</item>
+        <item>Maurice</item>
+        <item>Mike</item>
+        <item>Batman</item>
+        <item>Alphonse</item>
+        <item>Jean</item>
+        <item>Christophe</item>
+        <item>Albert</item>
+        <item>Thierry</item>
+        <item>Eric</item>
+        <item>Joël</item>
+        <item>Wilfried</item>
+        <item>Léon</item>
+        <item>Titeuf</item>
+        <item>Casper</item>
+        <item>Martine</item>
+        <item>Jean-Louis</item>
+        <item>Jean-Paul</item>
+        <item>Raymond</item>
+        <item>Frédéric</item>
+        <item>Dora</item>
+        <item>Arnold</item>
+        <item>Michel</item>
+        <item>Jean-Michel</item>
+        <item>Christian</item>
+        <item>Louis</item>
+        <item>José</item>
+        <item>Maria</item>
+        <item>Louise</item>
+        <item>Marie-Louise</item>
+        <item>Hugues</item>
+        <item>Roger</item>
+        <item>Luc</item>
+        <item>Serge</item>
+        <item>Maryline</item>
+        <item>Yvette</item>
+        <item>Berthe</item>
+        <item>Béatrice</item>
+        <item>Joséphine</item>
+        <item>Angela</item>
+        <item>Ségolène</item>
+        <item>Yves</item>
+        <item>Marcel</item>
+        <item>Superman</item>
+        <item>Bioman</item>
+        <item>Capitaine-Flamme</item>
+    </string-array>
 </resources>

@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.example.drinkalarm.R;
 import com.example.drinkalarm.application.JeuControlleur;
+import com.example.drinkalarm.metier.JoueurFormat;
 
 import java.util.List;
 
@@ -175,13 +176,20 @@ public class SettingsActivity extends PreferenceActivity {
                 //Partie supplémentaire : spécifique à DRINKAlarm
                 if (keyValue.compareTo(NOM_DEFAUT) == 0) {
                     //Vérification du nouveau mon de joueur
-                    int retour = JeuControlleur.isValidPersonName(stringValue);
-                    if (retour != JeuControlleur.OK) {
+                    int retour = JoueurFormat.isValidPersonName(stringValue);
+                    if (retour != JoueurFormat.OK) {
                             /**
                              * ALERT DIALOG : Erreur Saisie
                              */
                             AlertDialog.Builder builderErreur = new AlertDialog.Builder(SettingsActivity.this);
-                            builderErreur = JeuControlleur.completeBuilderErreur(builderErreur, retour, stringValue);
+                            builderErreur.setTitle("ERREUR saisie !");
+
+                            builderErreur.setMessage(getString(JoueurFormat.getMessErreur(retour)) + stringValue);
+                            builderErreur.setIcon(R.drawable.sys_error);
+                            builderErreur.setNegativeButton("Retour", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,int id) {
+                                    dialog.dismiss();}
+                            });
                             builderErreur.create();
                             builderErreur.show();
                         return false;
@@ -189,11 +197,14 @@ public class SettingsActivity extends PreferenceActivity {
                 }
             }
             //On formate d'abord la chaine entree avant de l'utiliser
-            stringValue = JeuControlleur.formatStr(stringValue);
+            stringValue = JoueurFormat.formatStr(stringValue);
             preference.setSummary(stringValue);
             return true;
         }
     };
+
+
+
 
     /**
      * Binds a preference's summary to its value. More specifically, when the
