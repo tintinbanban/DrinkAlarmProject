@@ -29,7 +29,7 @@ public class Action {
      * Tableau de proba de l'action en fonction des modes de jeu
      * @see Mode
      */
-    private Map<Mode,Float> chances = new HashMap<Mode,Float>();
+    private Map<String,Float> chances = new HashMap<String,Float>();
 
     /**
      * Nombre de participant pour l'action.
@@ -44,14 +44,17 @@ public class Action {
 
     /** Constructeur
      *
-     * @param titreAction
-     * @param cheminSon
      */
-    public Action(String titreAction, String descAction, String cheminSon) {
+    public Action(String titreAction, String descAction, String cheminSon, Integer nbParticipant, Boolean gorgeRandom,Map<String,Float> chances) {
         this.titreAction = titreAction;
         this.descAction = descAction;
         this.cheminSon = cheminSon;
+        this.nbParticipant = nbParticipant;
+        this.gorgeRamdom = gorgeRandom;
+        this.chances = chances;
     }
+
+    public Action(){}
 
     public Boolean getGorgeRamdom() {
         return gorgeRamdom;
@@ -69,11 +72,11 @@ public class Action {
         this.nbParticipant = nbParticipant;
     }
 
-    public Float getChance(Mode mode) {
+    public Float getChance(String mode) {
         return (chances.containsKey(mode))?chances.get(mode):0F;
     }
 
-    public void setChance(Mode mode, Float chance) {
+    public void setChance(String mode, Float chance) {
         this.chances.put(mode,chance);
     }
 
@@ -108,7 +111,7 @@ public class Action {
      * @param joueurs Liste des joueurs
      * @return String
      */
-    public String play(ArrayList<Joueur> joueurs) {
+    public String play(ArrayList<Joueur> joueurs, String description) {
         String retour = "";
 
         //nbParticipants = nb de joueurs qui vont être concerné par l'évènement : cul sec ou une gorgée...
@@ -121,9 +124,9 @@ public class Action {
         }
         if(gorgeRamdom){
             int randomNbGorgees = (int) (Math.random() * (6 * 10000000 / 10000000));
-            return randomNbGorgees + descAction + retour;
+            return randomNbGorgees + description + retour;
         }
         else
-            return descAction + retour;
+            return description + retour;
     }
 }

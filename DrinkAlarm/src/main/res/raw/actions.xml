@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE actions [
+    <!ELEMENT actions (action*)>
+    <!ELEMENT action (label, description, son, chance+, participant?, random?)>
+    <!ELEMENT label (#PCDATA)>
+    <!ELEMENT description (#PCDATA)>
+    <!ELEMENT son (#PCDATA)>
+    <!ELEMENT chance (#PCDATA)>
+    <!ATTLIST chance mode (soft | medium | hard | legend) #REQUIRED>
+    <!ELEMENT participant (#PCDATA)>
+    <!ELEMENT random (#PCDATA)>
+    ]>
+
+<actions>
+    <action>
+        <label>@string/action_a_la_votre</label>
+        <description>@string/action_description_a_la_votre</description>
+        <son>@raw/horn_tune</son>
+        <chance mode="soft">40</chance>
+        <chance mode="medium">37</chance>
+        <chance mode="hard">30</chance>
+        <chance mode="legend">50</chance>
+        <participant>0</participant>
+    </action>
+    <action>
+        <label>@string/action_bizut_time</label>
+        <description>@string/action_description_bizut_time</description>
+        <son>@raw/danse_du_ventre</son>
+        <chance mode="soft">20</chance>
+        <chance mode="medium">23</chance>
+        <chance mode="hard">20</chance>
+        <participant>1</participant>
+    </action>
+    <action>
+        <label>@string/action_cul_sec</label>
+        <description>@string/action_description_cul_sec</description>
+        <son>@raw/air_raid_2</son>
+        <chance mode="soft">20</chance>
+        <chance mode="medium">22</chance>
+        <chance mode="hard">5</chance>
+        <chance mode="legend">13</chance>
+        <participant>0</participant>
+    </action>
+    <action>
+        <label>@string/action_freeze</label>
+        <description>@string/action_description_freeze</description>
+        <son>@raw/pouet_pouet</son>
+        <chance mode="soft">10</chance>
+        <chance mode="medium">8</chance>
+        <chance mode="hard">14</chance>
+        <chance mode="legend">13</chance>
+        <participant>0</participant>
+    </action>
+    <action>
+        <label>@string/action_king_time</label>
+        <description>@string/action_description_king_time</description>
+        <son>@raw/call_to_arms</son>
+        <chance mode="soft">5</chance>
+        <chance mode="medium">8</chance>
+        <chance mode="hard">30</chance>
+        <chance mode="legend">35</chance>
+        <participant>0</participant>
+    </action>
+    <action>
+        <label>@string/action_bouffon_roi</label>
+        <description>@string/action_description_bouffon_roi</description>
+        <son>@raw/tour_de_france</son>
+        <chance mode="soft">5</chance>
+        <chance mode="medium">2</chance>
+        <chance mode="hard">1</chance>
+        <chance mode="legend">2</chance>
+        <participant>1</participant>
+        <random>1</random>
+    </action>
+</actions>

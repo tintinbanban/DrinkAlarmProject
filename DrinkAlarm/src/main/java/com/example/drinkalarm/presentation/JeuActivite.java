@@ -36,6 +36,8 @@ import android.widget.Toast;
 import com.example.drinkalarm.R;
 import com.example.drinkalarm.application.JeuControlleur;
 import com.example.drinkalarm.metier.Action;
+import com.example.drinkalarm.metier.Joueur;
+import com.example.drinkalarm.metier.JoueurFormat;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -165,6 +167,9 @@ public class JeuActivite extends ActionBarActivity {
     @SuppressLint("ResourceAsColor")
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
+        getResources().getIdentifier("horn_turn","strings",getPackageName());
+
         //Instanciation du lecteur audio
         mp = new MediaPlayer();
         //Mise en place du vibreur
@@ -188,7 +193,7 @@ public class JeuActivite extends ActionBarActivity {
         editor = preferences.edit();
 
         // Controller init
-        controller = new JeuControlleur("medium");
+        controller = new JeuControlleur("medium", getResources().getStringArray(R.array.name) ,getResources().openRawResource(R.raw.actions));
         controller.addJoueur(preferences.getString(SettingsActivity.NOM_DEFAUT, getString(R.string.nom_defaut)));
 
         /**
@@ -265,7 +270,7 @@ public class JeuActivite extends ActionBarActivity {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.listView);
         // Adapter pour la liste des joueurs
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this, drawer_list_item, controller.getJoueursAsString()));
+        mDrawerList.setAdapter(new ArrayAdapter<String>(this, drawer_list_item, getJoueursAsString()));
         /**
          * EVENEMENT -> Ajout d'un joueur
          */
@@ -300,7 +305,7 @@ public class JeuActivite extends ActionBarActivity {
                                     controller.deleteJoueur(position);
 
                                     //... au niveau de l'affichage
-                                    mDrawerList.setAdapter(new ArrayAdapter<String>(getApplicationContext(), drawer_list_item, controller.getJoueursAsString()));
+                                    mDrawerList.setAdapter(new ArrayAdapter<String>(getApplicationContext(), drawer_list_item, getJoueursAsString()));
 
                                     //On vérifie si le joueur par défaut a été effacé
                                     if (controller.getJoueurs().get(0).getNom().compareTo(preferences.getString(SettingsActivity.NOM_DEFAUT, getString(R.string.nom_defaut))) != 0) {
@@ -386,7 +391,7 @@ public class JeuActivite extends ActionBarActivity {
          */
         //Appel à un thread toutes les secondes
         chrono = (TextView) findViewById(R.id.compteur);
-        handler.postDelayed(run, 500);
+        handler.postDelayed(run, 1000);
     }
 
     // Utilisation de l'interface Runnable pour le multi-threading
@@ -422,7 +427,6 @@ public class JeuActivite extends ActionBarActivity {
 
     //Méthode publique qui gère l'utilisation du chrono
     public void updateTime() {
-        changeColor();
         if (getSecondes() == 0) {
             //Cas lancement d'une ACTION !!
             if (chrono.getText().toString().compareTo("00:00") == 0) {
@@ -439,8 +443,8 @@ public class JeuActivite extends ActionBarActivity {
 
                     //Apparition d'une Action
                     layoutAction.setBackgroundColor(Color.rgb(34,34,34));
-                    final String affTitre = action.getTitreAction() + "  -  (" + dteFormatee + ")";
-                    String affDesc = action.play(controller.getJoueurs());
+                    final String affTitre = getString(action.getTitreAction()) + "  -  (" + dteFormatee + ")";
+                    String affDesc = action.play(controller.getJoueurs(),getString(action.getDescAction()));
                     titreAction.setText(affTitre);
                     descAction.setText(affDesc);
                     imgAction.setImageResource(R.drawable.marteau_tour_appel);
@@ -457,9 +461,8 @@ public class JeuActivite extends ActionBarActivity {
                                 itemsLogs.add(0,unLog);
                     }
                     logsLv.setAdapter(adaptLogs);
-
                     //Chargement d'une chanson
-                    mp = MediaPlayer.create(getApplicationContext(),JeuControlleur.getSon(action.getCheminSon()));
+                    mp = MediaPlayer.create(getApplicationContext(), getResources().getIdentifier(action.getCheminSon(),"strings",getPackageName()));
                     mp.start();
                     //Mise en place d'un écouteur sur l'image (pour faire appel)
                     imgAction.setOnClickListener(new View.OnClickListener() {
@@ -467,7 +470,7 @@ public class JeuActivite extends ActionBarActivity {
                         public void onClick(View view) {
                             //Message de confirmation
                             new AlertDialog.Builder(JeuActivite.this)
-                                    .setTitle("Décision du " + dteFormatee + " : " + action.getTitreAction())
+                                    .setTitle("Décision du " + dteFormatee + " : " + getString(action.getTitreAction()))
                                     .setIcon(R.drawable.warning_icon)
                                     .setMessage("Souhaitez-vous vraiment faire appel ?")
                                     .setPositiveButton("Oui", new DialogInterface.OnClickListener()
@@ -497,7 +500,7 @@ public class JeuActivite extends ActionBarActivity {
             else
                 chrono.setText("00:" + (getSecondes() - 1));
         }
-        handler.postDelayed(run, 500);
+        handler.postDelayed(run, 1000);
     }
 
     //Méthode qui détermine le nombre de secondes affichées sur le chronomètre
@@ -693,6 +696,7 @@ public class JeuActivite extends ActionBarActivity {
         else if (action == MODIFICATION) {
             nouvNom.setText("Nouveau Nom :");
             nouvNom.setBackgroundColor(Color.rgb(0,6,43));
+
         }
 
         builder.setNeutralButton(getString(R.string.valid), new DialogInterface.OnClickListener() {
@@ -703,21 +707,18 @@ public class JeuActivite extends ActionBarActivity {
                 String name = eT_nom_joueur.getText().toString();
 
                 //Contrôle champ 'Nom'
-                int retour = JeuControlleur.isValidPersonName(name);
-                if (retour == JeuControlleur.OK) {
-                    //On formate d'abord la chaine entree avant de l'utiliser
-                    name = JeuControlleur.formatStr(name);
+                int retour = JoueurFormat.isValidPersonName(name);
+                if (retour == JoueurFormat.OK) {
 
                     if (action == AJOUT) {
                         /**
                          * Ajout  nom...
                          */
                         //... au niveau du controlleur
-                        name = JeuControlleur.doublon(controller.getJoueursAsString(), name);
                         controller.addJoueur(name);
 
                         //... au niveau de l'affichage
-                        mDrawerList.setAdapter(new ArrayAdapter<String>(getApplicationContext(), drawer_list_item, controller.getJoueursAsString()));
+                        mDrawerList.setAdapter(new ArrayAdapter<String>(getApplicationContext(), drawer_list_item, getJoueursAsString()));
                     }
                     else {
                         /**
@@ -741,19 +742,36 @@ public class JeuActivite extends ActionBarActivity {
     //Méthode publique qui modifie le nom d'un joueur durant une partie
     public void majNom(String name, int position) {
         //... au niveau du controlleur
-        if (position != 0)
-            name = JeuControlleur.doublon(controller.getJoueursAsString(), name);
         controller.updateJoueur(name, position);
 
         //... au niveau de l'affichage
-        mDrawerList.setAdapter(new ArrayAdapter<String>(getApplicationContext(), drawer_list_item, controller.getJoueursAsString()));
+        mDrawerList.setAdapter(new ArrayAdapter<String>(getApplicationContext(), drawer_list_item, getJoueursAsString()));
     }
 
     //Méthode publique qui affiche une boîte de dialogue d'erreur : SAISIE NOM incorrecte
     public void erreurNom(int codeRetour, String name) {
         AlertDialog.Builder builderErreur = new AlertDialog.Builder(JeuActivite.this);
-        builderErreur = JeuControlleur.completeBuilderErreur(builderErreur, codeRetour, name);
+        builderErreur.setTitle("ERREUR saisie !");
+
+        builderErreur.setMessage(getString(JoueurFormat.getMessErreur(codeRetour)) + name);
+        builderErreur.setIcon(R.drawable.sys_error);
+        builderErreur.setNegativeButton("Retour", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog,int id) {
+                dialog.dismiss();}
+        });
         builderErreur.create();
         builderErreur.show();
+    }
+
+
+    private String getString(String s){
+        return getResources().getString(getResources().getIdentifier(s,"strings",getPackageName()));
+    }
+    private ArrayList<String> getJoueursAsString(){
+        ArrayList<String> retour = new ArrayList<String>();
+        for(Joueur j : controller.getJoueurs()){
+            retour.add(j.getNom());
+        }
+        return retour;
     }
 }

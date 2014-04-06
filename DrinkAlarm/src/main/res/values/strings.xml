@@ -15,5 +15,8 @@
     <string name="drawer_close">drawer cloese</string>
     <string name="hard">Hard</string>
     <string name="legend">Legend</string>
-
+    <string name="err_nom_mess">Le nom entré contient des caractères invalides : </string>
+    <string name="empty_nom_mess">La chaîne saisie est vide !</string>
+    <string name="err_default">Une erreur c\'est produite.</string>
+    <string name="err_length_mess">Le nom doit etre compris entre 3 et 15 caractères : </string>
 </resources>

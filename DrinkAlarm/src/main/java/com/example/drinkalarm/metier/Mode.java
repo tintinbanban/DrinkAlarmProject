@@ -15,6 +15,8 @@ public class Mode {
      */
     private Float chance;
 
+    private Integer id;
+
     public Mode(String libelle, Float chance) {
         this.libelle = libelle;
         this.chance = chance;

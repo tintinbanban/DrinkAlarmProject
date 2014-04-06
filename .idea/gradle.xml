@@ -7,8 +7,8 @@
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
-            <option value="C:\Users\Tocard\AndroidStudioProjects\DrinkAlarm" />
-            <option value="C:\Users\Tocard\AndroidStudioProjects\DrinkAlarm\DrinkAlarm" />
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/DrinkAlarm" />
           </set>
         </option>
       </GradleProjectSettings>
